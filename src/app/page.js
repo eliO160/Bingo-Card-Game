@@ -1,95 +1,115 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client'; //file should run in client side
+import { useState, useEffect } from 'react';
+import Header from './components/Header';
+import Card from './components/Card';
+import Popup from './components/Popup';
 
-export default function Home() {
+function Home() {
+  const [done, setDone] = useState([]); //array of clicked box ids
+  const [winner, setWinner] = useState(false);
+  const [boxData, setBoxData] = useState([]);
+
+  //fetch boxes from API- useeffect hook takes 2 arguements: a callback function and a dependency array
+  //(tells react when to re-run the effect)
+  //the function runs when the component mounts, and the dependency array controls when it runs
+  //in this case, it runs once when the component mounts because the array is empty
+  //the function fetches data from the backend API, converts it to JSON, and maps
+  //the data to create an array of box objects with id, text, and name
+  //the box objects are then stored in the boxData state variable
+  //this is used to render the boxes in the Card component
+  useEffect(() => {
+    async function fetchBoxes() {
+      await fetch('http://localhost:3001/api/boxes/seed');
+      const res = await fetch('http://localhost:3001/api/boxes'); //send GET req to boxes to get boxes from backend
+      const data = await res.json(); //converts response to JSON data
+      
+      //map data to create array of box objects with id, text, and name
+      //this is used to render boxes in Card component
+      const boxes = data.map((box, i) => ({
+        _id: box._id, //new field to store MongoDB id
+        id: i + 1,
+        text: box.text,
+        name: `Box ${i + 1}`
+      }));
+      setBoxData(boxes); //updates react state with fetched box data, triggers re-render
+    }
+    fetchBoxes(); //
+  }, []); //empty dependency array means this effect runs once when component mounts
+
+  //handle click function, updates state
+  const handleBoxClick = (id) => {
+    setDone(prev => { //prev is latest state value
+      if(prev.includes(id)) { //if id is already in done array, remove it
+        return prev.filter(c => c !== id); // filter out the clicked box id
+      } else {
+        const updated = [...prev, id]; //if id is not in done array, add it
+        checkWin(updated); //check if the updated array results in a win
+        return updated;  // return the updated array
+      }
+    }); 
+  };
+
+  const checkWin = (doneArr) => {
+    const rows = [
+      [1, 2, 3, 4, 5],
+      [6, 7, 8, 9, 10],
+      [11, 12, 13, 14, 15],
+      [16, 17, 18, 19, 20],
+      [21, 22, 23, 24, 25],
+      [1, 6, 11, 16, 21],
+      [2, 7, 12, 17, 22],
+      [3, 8, 13, 18, 23],
+      [4, 9, 14, 19, 24],
+      [5, 10, 15, 20, 25],
+      [1, 7, 13, 19, 25],
+      [5, 9, 13, 17, 21]
+    ];
+    for (let row of rows) {
+      if (row.every(num => doneArr.includes(num))) {
+        setWinner(true);
+        break;
+      }
+    }
+  };
+//new feature, handle text change in Box component
+//this function updates the text of a box when the user edits it
+//it sends a POST request to the backend API to update the box text
+//it also updates the local state to reflect the change immediately
+  const handleTextChange = async (boxId, newText) => {
+    try {
+      await fetch(`http://localhost:3001/api/boxes/${boxId}`, { //update to listen for PUT
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' }, //tells the backend what type of data is being sent
+        body: JSON.stringify({ text: newText }) //new text wrapped in json object
+      });
+      setBoxData(prev =>
+        prev.map(box =>
+          box._id === boxId ? { ...box, text: newText } : box
+        )
+      );
+    } catch (err) {
+        console.error('Failed to update box text', err);
+    }
+  };
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
+    <main>
+      <Header />
+      {boxData.length === 25 ? (
+        <Card
+          boxes={boxData}
+          done={done}
+          onBoxClick={handleBoxClick}
+          onTextChange={handleTextChange} // Pass the text change handler to Card
         />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.js</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      ) : (
+        <p>Loading boxes...</p>
+      )}
+      {winner && <Popup text="Bingo!" />} 
+    </main>
   );
 }
+
+export default Home;
+
+//

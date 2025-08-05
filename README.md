@@ -1,10 +1,88 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Bingo Game Application
+
+This Bingo Card Game is a web-based minimal viable product (MVP) created as part of a coding bootcamp I completed in **Summer 2025** while pursuing my **M.S. in Software Engineering** at **Cal State Fullerton**. It was developed over three agile sprints to showcase a functional prototype. 
+
+NOTE: The current iteration of this project utilizes an in-memory database. A more persistent database will be added in future sprints.
+
+The game features a simple, clickable Bingo grid that displays “Bingo!” when five boxes in a row (horizontally, vertically, or diagonally) are selected. Prompts are currently stored in-memory.
+
+---
+
+## 👨‍💻 My Contributions to MVP
+
+I built the initial version of this project with the following core features:
+- Functional Bingo grid UI
+- Game logic to detect “Bingo”
+- Static backend with in-memory prompts
+- Basic layout and styling
+
+---
+
+## Tech Stack
+
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).  
+
+It includes a backend server for box data and a frontend bingo game.
+
+- **Frontend:** React using Next.js 
+- **Backend:** Node.js, Express (in-memory data only)
+- **Styling:** Basic CSS 
+- **Database:** In-memory (MongoDB planned)
+- **Tools:** Git, GitHub, Postman
+
+
+
+## Suggested Future Roadmap
+Future sprints will expand in the following areas:
+
+### Backend
+- Refactor to use MongoDB for persistent storage
+- Save full game state per user
+- Introduce API routes for card generation and progress tracking
+
+### UI/UX
+- Transition styling to Tailwind CSS
+- Improve layout, responsiveness, and accessibility
+
+### Authentication
+- Integrate Authentication, suggested Firebase
+- Support OAuth login with Google or Student Email
+
+### Features
+- Support multiple game cards and multiplayer functionality
+- Add user profiles and saved game history
+- Bingo celebration animations and sound effects
+
+### Deployment
+- Frontend: Deploy to Vercel
+- Backend: Deploy to Render or Railway
+- Add CI/CD pipeline for streamlined development
+
+
 
 ## Getting Started
 
-First, run the development server:
+### 1. Clone the Repo
+
+### 2. Install Dependencies
+
+npm install
+
+### 3. Start the Backend Server
 
 ```bash
+cd server
+node index.js
+```
+
+The backend runs on [http://localhost:3001](http://localhost:3001).
+
+### 4. Start the Frontend Development Server
+
+Go back to the project root:
+
+```bash
+cd ..
 npm run dev
 # or
 yarn dev
@@ -14,23 +92,27 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The frontend runs on [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+### 3. Play the Game
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Open [http://localhost:3000](http://localhost:3000) in your browser.  
+You can edit the bingo board by modifying `src/app/page.js`. The page auto-updates as you edit the file.
+
+---
+
+## Project Features
+
+- Bingo grid powered by Next.js
+- Box data fetched from a Node.js backend
+- Editable box text and win detection
+- Popup notification on bingo win
+
+---
 
 ## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Learn Next.js](https://nextjs.org/learn)
+- [Next.js GitHub repository](https://github.com/vercel/next.js)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
