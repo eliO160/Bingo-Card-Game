@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-function Box({ box, isDone, onClick, onTextChange }) {
+function Box({ box, isDone, onClick, }) {
   const [text, setText] = useState(box.text); //Local state for live editing
 
   //Update local input state as user types

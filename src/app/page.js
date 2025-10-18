@@ -71,26 +71,6 @@ function Home() {
       }
     }
   };
-//new feature, handle text change in Box component
-//this function updates the text of a box when the user edits it
-//it sends a POST request to the backend API to update the box text
-//it also updates the local state to reflect the change immediately
-  const handleTextChange = async (boxId, newText) => {
-    try {
-      await fetch(`http://localhost:3001/api/boxes/${boxId}`, { //update to listen for PUT
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' }, //tells the backend what type of data is being sent
-        body: JSON.stringify({ text: newText }) //new text wrapped in json object
-      });
-      setBoxData(prev =>
-        prev.map(box =>
-          box._id === boxId ? { ...box, text: newText } : box
-        )
-      );
-    } catch (err) {
-        console.error('Failed to update box text', err);
-    }
-  };
 
   return (
     <main>
@@ -100,7 +80,6 @@ function Home() {
           boxes={boxData}
           done={done}
           onBoxClick={handleBoxClick}
-          onTextChange={handleTextChange} // Pass the text change handler to Card
         />
       ) : (
         <p>Loading boxes...</p>

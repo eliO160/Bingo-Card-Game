@@ -1,6 +1,6 @@
 import Box from './Box';
 
-function Card ({ boxes, done, onBoxClick, onTextChange }) {
+function Card ({ boxes, done, onBoxClick }) {
   return (
     <div className="container">
       {boxes.map(box => (
@@ -9,7 +9,6 @@ function Card ({ boxes, done, onBoxClick, onTextChange }) {
           box={box}
           isDone={done.includes(box.id)}
           onClick={() => onBoxClick(box.id)}
-          onTextChange={(newText) => onTextChange(box._id, newText)} // Pass the text change handler
         />
       ))}
     </div>
